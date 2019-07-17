@@ -23,7 +23,7 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 
 1. devide the workspace to grids
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/1.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/1.%20gazebo%20simulation.png)
 
 
 
@@ -31,14 +31,14 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 2. offline mapping between grids and pixels of sensors
 	save the result to ./kinects_obstacle_extractor/data/kinect_depth_optical_frame.txt
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/2.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/2.%20workspace.png)
 
 
 
 
 3. free space. no obstacle and can be seen by sensors
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/3.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/3.%20free%20space.png)
 
 
 
@@ -46,7 +46,7 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 
 4. unknown space. grids in workspace that can not be seen by  sensors
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/4.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/4.%20unknown%20space.png)
 
 
 
@@ -54,7 +54,7 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 
 5. point clouds from sensors. obstacles and robot surface seen by sensors.
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/5.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/5.%20points%20cloud%20from%20kinects.png)
 
 
 
@@ -62,7 +62,7 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 
 6. occlusion space. grids in workspace that blocked from sensors by obstacles.
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/6.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/6.%20occlusion%20space.png)
 
 
 
@@ -70,7 +70,7 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 
 7. filter out robot itself from the point clouds
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/7.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/7.%20robot%20filter.png)
 
 
 
@@ -78,7 +78,7 @@ Refresh the Grid-base Map of a manipulator workspace in real-time
 
 8. final grid map. include free space obstacles surface and occlusion space.
 
-![](https://github.com/githubdu/ObsTractor/blob/master/pictures/8.png)
+![](https://github.com/githubdu/ObsTractor/blob/master/pictures/8.%20final%20grid%20map.png)
 
 
 
