@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <world name="lwr_arm">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <include>
+      <uri>model://cafe_table</uri>
+      <name>Cafe Table</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+	
+  </world>
+</sdf>

@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--common macros-->
+  <xacro:include filename="$(find lwr_description)/urdf/common.xacro"/>
+
+  <material name="Grey">
+    <color rgba="0.4 0.4 0.4 1.0"/>
+  </material>
+
+  <material name="Orange">
+    <color rgba="${255/255} ${108/255} ${10/255} 1.0"/>
+  </material>
+
+  <!-- properties /-->
+  <property name="arm_elem_base_mass"        value="2.0"/>
+  <property name="arm_elem_link_mass"        value="2.0"/>
+  <property name="arm_elem_end_link_mass"    value="2.0"/>
+  <property name="arm_elem_ball_link_mass"   value="2.0"/>
+  <property name="safety_controller_k_pos"   value="100"/>
+  <property name="safety_controller_k_vel"   value="2.0"/>
+  <property name="max_effort"                value="300"/>
+  <property name="max_velocity"              value="10" />
+  <property name="joint_damping"             value="0.5"/>
+  <property name="joint_friction"            value="10" /> 
+  <property name="arm_velocity_scale_factor" value="1"  />
+  <property name="mesh_path"                 value="package://lwr_description/meshes" />
+
+  <!-- TRANSMISSIONS -->
+  <xacro:macro name="xtransmission" params="name id">
+    <transmission name="${name}_arm_${id}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${name}_arm_${id}_joint">
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${name}_motor_${id}">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- URDF model /-->
+  <xacro:macro name="kuka_lwr_arm" params="parent name"> 
+
+    <!-- JOINT BASE -->
+    <joint name="${parent}_${name}_arm_base_joint" type="fixed">
+      <origin xyz="0 0 0.775" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="${name}_arm_base_link"/>
+    </joint>
+
+    <!-- LINK BASE -->
+    <link name="${name}_arm_base_link">
+      <inertial>
+        <mass value="${arm_elem_base_mass}"/>
+        <!--<origin xyz="0 0 0.055" rpy="0 0 0"/>-->
+        <origin xyz="-0.1 0 0.07" rpy="0 0 0"/>
+        <cylinder_inertia_def radius="0.06" length="0.11" mass="${arm_elem_base_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_base.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_0.stl"/>
+        </geometry>
+        <material name="Grey"/>
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_base_convex.stl"/>-->
+          <mesh filename="${mesh_path}/iiwa7/collision/link_0.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 0 -->
+    <joint name="${name}_arm_0_joint" type="revolute">
+      <!--<origin xyz="0 0 0.11" rpy="0 0 ${M_PI}"/>-->
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${-170 * M_PI / 180}" upper="${170 * M_PI / 180}"
+             effort="${max_effort}" velocity="${arm_velocity_scale_factor * 110 * M_PI / 180}" />
+      <safety_controller soft_lower_limit="${-168 * M_PI / 180}"  soft_upper_limit="${168 * M_PI / 180}"
+             k_position="${safety_controller_k_pos}"  k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_base_link"/>
+      <child link="${name}_arm_1_link"/>
+    </joint>
+
+    <!-- LINK ARM 1 -->
+    <link name="${name}_arm_1_link">
+      <inertial>
+        <mass value="${arm_elem_link_mass}"/>
+        <!--<origin rpy="0 0 0" xyz="0 0.05 0.130"/>-->
+        <origin xyz="0 -0.03 0.12" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.26" width="0.06" height="0.12" mass="${arm_elem_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0.0075" rpy="0 0 0"/>
+        <geometry>
+            <!--<mesh filename="${mesh_path}/meshes_arm/arm_segment_a.dae"/>-->
+            <mesh filename="${mesh_path}/iiwa7/visual/link_1.stl"/>
+        </geometry>
+        <material name="Orange"/>
+      </visual>
+      <collision>
+          <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+          <origin xyz="0 0 0.0075" rpy="0 0 0"/>
+          <geometry>
+            <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_segment_a_convex.stl"/>-->
+            <mesh filename="${mesh_path}/iiwa7/collision/link_1.stl"/>
+          </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 1 -->
+    <joint name="${name}_arm_1_joint" type="revolute">
+      <!--<origin xyz="0 0 0.20" rpy="0 0 0"/>-->
+      <origin xyz="0 0 0.19" rpy="${M_PI / 2} 0 ${M_PI}"/>
+      <!--<axis xyz="0 -1 0"/>-->
+      <axis xyz="0 0 1"/>
+      <limit lower="${-120 * M_PI / 180}" upper="${120 * M_PI / 180}" 
+          effort="${max_effort}" velocity="${arm_velocity_scale_factor * 110 * M_PI / 180}" />       
+      <safety_controller soft_lower_limit="${-118 * M_PI / 180}" soft_upper_limit="${118 * M_PI / 180}"
+          k_position="${safety_controller_k_pos}" k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_1_link"/>
+      <child link="${name}_arm_2_link"/>
+    </joint>
+
+    <!-- LINK ARM 2 -->
+    <link name="${name}_arm_2_link">
+      <inertial>
+        <mass value="${arm_elem_link_mass}"/>	
+        <!--<origin rpy="0 0 0" xyz="0 -0.05 ${0.130 - 0.06}"/>-->
+        <origin xyz="0.0003 0.059 0.042" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.26" width="0.06" height="0.12" mass="${arm_elem_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0.2" rpy="${M_PI} 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_segment_b.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_2.stl"/>
+        </geometry>
+        <material name="Orange"/>
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0.2" rpy="${M_PI} 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_segment_b_convex.stl"/>-->
+            <mesh filename="${mesh_path}/iiwa7/collision/link_2.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 2 -->
+    <joint name="${name}_arm_2_joint" type="revolute">
+      <!--<origin xyz="0 0 0.20" rpy="0 0 0"/>-->
+      <origin xyz="0 0.21 0" rpy="${M_PI / 2} 0 ${M_PI}"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${-170 * M_PI / 180}"	upper="${170 * M_PI / 180}" 
+            effort="${max_effort}" velocity="${arm_velocity_scale_factor * 130 * M_PI / 180}" />
+      <safety_controller soft_lower_limit="${-168 * M_PI / 180}" soft_upper_limit="${168 * M_PI / 180}"
+            k_position="${safety_controller_k_pos}" k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_2_link"/>
+      <child link="${name}_arm_3_link"/>
+    </joint>
+
+    <!-- LINK ARM 3 -->
+    <link name="${name}_arm_3_link">
+      <inertial>
+        <mass value="${arm_elem_link_mass}"/>
+        <!--<origin rpy="0 0 0" xyz="0 -0.06 0.130"/>-->
+        <origin xyz="0 0.03 0.13" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.26" width="0.06" height="0.12" mass="${arm_elem_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0" rpy="0 0 0"/>-->
+        <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_segment_a.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_3.stl"/>
+        </geometry>
+        <material name="Orange"/>
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0" rpy="0 0 0"/>-->
+        <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_segment_a_convex.stl"/>-->
+          <mesh filename="${mesh_path}/iiwa7/collision/link_3.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 3 --> 
+    <joint name="${name}_arm_3_joint" type="revolute">
+      <!--<origin xyz="0 0 0.20" rpy="0 0 0"/>-->
+      <origin xyz="0 0 0.19" rpy="${M_PI / 2} 0 0"/>
+      <!--<axis xyz="0 1 0"/>-->
+      <axis xyz="0 0 1"/>
+      <limit  lower="${-120 * M_PI / 180}" 	upper="${120 * M_PI / 180}" 
+              effort="${max_effort}" 	velocity="${arm_velocity_scale_factor * 130 * M_PI / 180}" />
+      <safety_controller soft_lower_limit="${-118 * M_PI / 180}" soft_upper_limit="${118 * M_PI / 180}"
+              k_position="${safety_controller_k_pos}" k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_3_link"/>
+      <child link="${name}_arm_4_link"/>
+    </joint>
+
+    <!-- LINK ARM 4 -->
+    <link name="${name}_arm_4_link">
+      <inertial>
+        <mass value="${arm_elem_link_mass}"/>
+        <!--<origin rpy="0 0 0" xyz="0 0.06 ${0.130 - 0.06}"/>-->
+        <origin xyz="0 0.067 0.034" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.26" width="0.06" height="0.12" mass="${arm_elem_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0.2" rpy="0 ${M_PI} ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_segment_b.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_4.stl"/>
+        </geometry>
+        <material name="Orange"/>
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0.2" rpy="0 ${M_PI} ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_segment_b_convex.stl"/>-->
+          <mesh filename="${mesh_path}/iiwa7/collision/link_4.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 4 -->
+    <joint name="${name}_arm_4_joint" type="revolute">
+      <!--<origin xyz="0 0 0.20" rpy="0 0 0"/>-->
+      <origin xyz="0 0.21 0" rpy="${-M_PI / 2} ${M_PI} 0"/>
+      <axis xyz="0 0 1"/>
+      <limit  lower="${-170 * M_PI / 180}" upper="${170 * M_PI / 180}" 
+          effort="${max_effort}" velocity="${arm_velocity_scale_factor * 130 * M_PI / 180}" />
+      <safety_controller soft_lower_limit="${-168 * M_PI / 180}" soft_upper_limit="${168 * M_PI / 180}"
+          k_position="${safety_controller_k_pos}" k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_4_link"/>
+      <child link="${name}_arm_5_link"/>
+    </joint>
+
+    <!-- LINK ARM 5 -->
+    <link name="${name}_arm_5_link">
+      <inertial>
+        <mass value="${arm_elem_link_mass}"/>
+        <!--<origin rpy="0 0 0" xyz="0 0 0.124"/>-->
+        <origin xyz="0.0001 0.021 0.076" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.248" width="0.06" height="0.12" mass="${arm_elem_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+        <geometry name="${name}_arm_5_geom">
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_segment_last.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_5.stl"/>
+        </geometry>
+        <material name="Orange"/>
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_segment_last_convex.stl"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_5.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 5 -->
+    <joint name="${name}_arm_5_joint" type="revolute">
+      <!--<origin xyz="0 0 0.19" rpy="0 0 0"/>-->
+      <origin xyz="0 0.06070 0.19" rpy="${M_PI / 2} 0 0"/>
+      <!--<axis xyz="0 -1 0"/>-->
+      <axis xyz="0 0 1"/>
+      <limit  lower="${-120 * M_PI / 180}" 	upper="${120 * M_PI / 180}" 
+          effort="${max_effort}" 	velocity="${arm_velocity_scale_factor * 180 * M_PI / 180}" />
+      <safety_controller soft_lower_limit="${-118 * M_PI / 180}" soft_upper_limit="${118 * M_PI / 180}"
+          k_position="${safety_controller_k_pos}" k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_5_link"/>
+      <child link="${name}_arm_6_link"/>
+    </joint>
+
+    <!-- LINK ARM 6 -->
+    <link name="${name}_arm_6_link">
+      <inertial>
+        <mass value="${arm_elem_ball_link_mass}"/>
+        <!--<origin rpy="0 0 0" xyz="0 0 0.0625"/>-->
+        <origin xyz="0 0.0006 0.0004" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.125" width="0.125" height="0.125" mass="${arm_elem_ball_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_wrist.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_6.stl"/>
+        </geometry>
+        <material name="Orange"/>
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>-->
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_wrist_convex.stl"/>-->
+          <mesh filename="${mesh_path}/iiwa7/collision/link_6.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- JOINT ARM 6 -->
+    <joint name="${name}_arm_6_joint" type="revolute">
+      <!--<origin xyz="0 0 0.078" rpy="0 0 ${M_PI}"/>-->
+      <origin xyz="0 0.081 0.06070" rpy="${- M_PI / 2} ${M_PI} 0"/>
+      <axis xyz="0 0 1"/>
+      <limit  lower="${-170 * M_PI / 180}"  upper="${170 * M_PI / 180}" 
+          effort="${max_effort}" 	velocity="${arm_velocity_scale_factor * 180 * M_PI / 180}" />
+      <safety_controller soft_lower_limit="${-168 * M_PI / 180}" soft_upper_limit="${168 * M_PI / 180}"
+          k_position="${safety_controller_k_pos}" k_velocity="${safety_controller_k_vel}"/>
+      <dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+      <parent link="${name}_arm_6_link"/>
+      <child link="${name}_arm_7_link"/>
+    </joint>
+
+    <!-- LINK ARM 7 -->
+    <link name="${name}_arm_7_link">
+      <inertial>
+        <mass value="${arm_elem_end_link_mass}"/>
+        <!--<origin xyz="0 0 0"/>-->
+        <origin xyz="0 0 0.02" rpy="0 0 0"/>
+        <cuboid_inertia_def length="0.2" width="0.2" height="0.2" mass="${arm_elem_end_link_mass}"/>
+      </inertial>
+      <visual>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${right * -1/4 * M_PI  +  M_PI}"/>-->
+        <origin xyz="0 0 -0.0005" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/arm_flanche${tool_name}.dae"/>-->
+          <mesh filename="${mesh_path}/iiwa7/visual/link_7_basic.stl"/>
+        </geometry>
+        <material name="Grey"/>                
+      </visual>
+      <collision>
+        <!--<origin xyz="0 0 0" rpy="0 0 ${right * -1/4 * M_PI  +  M_PI}"/>-->
+        <origin xyz="0 0 -0.0005" rpy="0 0 0"/>
+        <geometry>
+          <!--<mesh filename="${mesh_path}/meshes_arm/convex/arm_flanche${tool_name}_convex.stl"/>-->
+          <mesh filename="${mesh_path}/iiwa7/collision/link_7_basic.stl"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- TRANSMISSIONS -->
+    <xacro:xtransmission name="${name}" id="0"/>
+    <xacro:xtransmission name="${name}" id="1"/>
+    <xacro:xtransmission name="${name}" id="2"/>
+    <xacro:xtransmission name="${name}" id="3"/>
+    <xacro:xtransmission name="${name}" id="4"/>
+    <xacro:xtransmission name="${name}" id="5"/>
+    <xacro:xtransmission name="${name}" id="6"/>
+
+  </xacro:macro>
+
+</robot>

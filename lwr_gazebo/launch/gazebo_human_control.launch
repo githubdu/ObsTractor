@@ -1,0 +1,7 @@
+<!---->
+<launch>
+
+  <!--Move the human in the gazebo word-->
+  <node pkg="lwr_gazebo" type="lwr_gazebo" name="human_controller"/>
+
+</launch>

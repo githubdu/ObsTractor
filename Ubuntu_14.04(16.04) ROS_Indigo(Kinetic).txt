@@ -1,0 +1,57 @@
+1. 安装Ubuntu 14.04/16.04 desktop amd64或者i386
+	1.0. 可选用exbot定制版，ROS环境已安装完毕
+	1.1. 用wubi安装
+	1.2. 刻录U盘安装
+	
+2. 安装NVIDIA显卡驱动和CUDA
+	2.0. 可省略，如果想用cuda处理Kinect数据则安装
+	2.1. 双击CUDA7.5.18.deb安装toolkit以及显卡驱动
+	2.2. 打开software&update的Additional Drivers切换显卡驱动
+	
+3. 安装搜狗输入法
+	3.0. 可省略
+	3.1. 下载sougoupinyin.deb并安装
+	
+4. 安装ROS-Indigo/Kinetic
+	4.1. 如果安装exbot定制版Ubuntu，ROS已经安装完成；
+	4.2. 否则，请按照wiki.ros.org的步骤完成ROS的安装
+	
+5. 安装Gazebo
+	5.1. 如果安装exbot定制版Ubuntu，Gazebo已经安装完成；
+	5.2. 否则，请按照http://gazebosim.org/的步骤安装Gazebo 2.2
+	5.3  解决 Gazebo启动时频繁打印waited 1 seconds ....的问题
+
+		http://answers.ros.org/question/199401/problem-with-indigo-and-gazebo-22/
+
+		The best way to solve this problem is update Gazebo 2.2, 
+		but you must add packages.osrfoundation.org at Ubuntu repositories.
+
+		sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu trusty main" > /etc/apt/sources.list.d/gazebo-latest.list'
+		wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+
+
+		Then if you update Ubuntu, It install Gazebo 2.2.5. Now it all works!		
+
+	或者 source /usr/share/gazebo-2.2/setup.sh
+	
+6. 安装gazebo-ros-pkgs
+	6.0. 按照gazebsim.org中tutorials中的connect to ROS的步骤安装
+	6.1. 下载源码修改gazebo_ros_openni_kinect.cpp，Catkin 编译
+	<!--Warning ! -->
+	Modify the file 'gazebo_ros_openni_kinect.cpp' in gazebo_ros_pkgs, 
+	make sure the depth data is in milimeter NOT in meter,
+	otherwise the realtime_urdf_filter for lwr_sim will not work.
+
+7. 安装ros_control
+	7.1. 按照wiki.ros.org/ros_control中的步骤安装
+	
+8. 安装/升级PCL
+	8.1. 按照pointclouds.org/downloads/linux.html的步骤安装PCL
+	8.2. 安装PCL_ROS_PKGS
+
+9. 安装RoboWare Studio
+    9.1. ROS下的开源集成开发环境
+	9.2. 下载roboware-studio_amd64.deb并安装
+
+10. 编写/编译源代码
+	现在可以开始编写程序了

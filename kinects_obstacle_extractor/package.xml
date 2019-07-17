@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <name>kinects_obstacle_extractor</name>
+  <version>0.0.0</version>
+  <description>The kinects_human_tracking package is meant to be used for tracking moving objects and/or humans around a robot</description>
+
+  <maintainer email="duhuibin@sia.cn">duhuibin</maintainer>
+
+  <license>BSD</license>
+
+  <author email="duhuibin@sia.cn">duhuibin</author>
+
+  <!-- The *_depend tags are used to specify dependencies -->
+  <!-- Dependencies can be catkin packages or system dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>tf_conversions</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <run_depend>message_runtime</run_depend>
+
+</package>

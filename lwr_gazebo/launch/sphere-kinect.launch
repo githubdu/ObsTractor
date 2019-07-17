@@ -1,0 +1,29 @@
+<!---->
+<launch>
+
+  <env name="GAZEBO_MODEL_PATH" value="$(find lwr_gazebo)/models:GAZEBO_MODEL_PATH"/>
+
+  <!--launch gazebo using arguments-->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name"   value="$(find lwr_gazebo)/worlds/sphere-kinect.world"/>
+    <arg name="debug"        value="false" />
+    <arg name="gui"          value="true" />
+    <arg name="paused"       value="false" />
+    <arg name="use_sim_time" value="true"  />
+    <arg name="headless"     value="false" />
+  </include>
+
+  <!-- If you change the tf, remember to change also the kinect pose in the world file .sdf-->
+  <node pkg="tf" type="static_transform_publisher" name="kinect1" 
+	args="-1.5 -0.5 1.5 1 0 0 0 /world /kinect1_link 50" />
+
+  <node pkg="tf" type="static_transform_publisher" name="kinect1_optical" 
+	args="0 -0.020 0 0.5 0.5 0.5 0.5 /kinect1_link /kinect1_depth_optical_frame 50" />
+
+  <node pkg="tf" type="static_transform_publisher" name="kinect2" 
+	args="0.5 1.5 1.2 0.707106781 -0.707106781 0 0 /world /kinect2_link 50" />
+  
+  <node pkg="tf" type="static_transform_publisher" name="kinect2_optical" 
+	args="0 -0.020 0 0.5 0.5 0.5 0.5 /kinect2_link /kinect2_depth_optical_frame 50" />
+
+</launch>

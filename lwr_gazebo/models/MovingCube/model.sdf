@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="moving_cube">
+    <link name="base_link">
+      <gravity>false</gravity>
+      <inertial>
+        <mass> 50 </mass>
+        <inertia>
+	  <ixx>50</ixx>
+	  <ixy>0</ixy>
+	  <ixz>0</ixz>
+	  <iyy>50</iyy>
+	  <izz>50</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <pose>0 0 0.5 0 0 0 </pose>
+        <geometry>
+ 	  <box>
+            <size> 0.5 0.5 1.5 </size>
+	  </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>world</odometryTopic>
+      <odometryFrame>world</odometryFrame>
+      <odometryRate>30.0</odometryRate>
+      <robotBaseFrame>cube_link</robotBaseFrame>
+    </plugin>
+  </model>
+</sdf>

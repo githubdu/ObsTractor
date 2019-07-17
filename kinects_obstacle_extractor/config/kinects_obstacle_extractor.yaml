@@ -1,0 +1,14 @@
+
+kinect_topic_name1: "kinect1/depth/image_raw" 
+out_topic_name1: "kinect1/depth/depthAsRGB" 
+
+kinect_topic_name2: "kinect2/depth/image_raw" 
+out_topic_name2: "kinect2/depth/depthAsRGB" 
+
+robot_joint_states: "/joint_states" 
+robot_base_frame: "lwr_arm_base_link"
+
+robot_workspace:
+  minimum: [-750.0, -750.0, -300.0]
+  maximum: [ 750.0,  750.0,  1200.0]
+  point_num: [75, 75, 75]

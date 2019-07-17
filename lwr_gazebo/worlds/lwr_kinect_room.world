@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <world name="lwr_kinect_room">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://Xtion1</uri>
+      <name>kinect1</name>
+      <pose>-1.5 -0.5 1.5 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://Xtion2</uri>
+      <name>kinect2</name>
+      <pose>0.5 1.5 1.2 0 0 -1.5708</pose>
+    </include>
+    <include>
+      <uri>model://cafe_table</uri>
+      <name>Cafe Table</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://Cage</uri>
+      <name>cage</name>
+      <pose>-3 0 0 0 0 0</pose>
+    </include>
+    <include>
+      <name>robonaut</name>
+      <uri>model://robonaut</uri>
+      <pose> 0 -1.75 0 0 0 3.1415926</pose>
+    </include>
+
+    <include>
+      <name>MovingHuman</name>
+      <uri>model://MovingHuman</uri>
+      <pose> 1.3 -0.44 0 0 0 -1.5708</pose>
+    </include>
+	
+  </world>
+</sdf>

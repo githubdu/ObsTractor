@@ -1,0 +1,67 @@
+<launch>
+  <arg name="kinect_topic_name1" default="kinect1/depth/image_raw"/>
+  <arg name="kinect_topic_name2" default="kinect2/depth/image_raw"/>
+  <arg name="kinect_topic_name3" default=""/>
+  <arg name="kinect_topic_name4" default=""/>
+  <arg name="kinect_topic_name5" default=""/>
+  <arg name="kinect_topic_name6" default=""/>
+  <arg name="kinect_topic_name7" default=""/>
+  <arg name="kinect_topic_name8" default=""/>
+  <arg name="kinect_topic_name9" default=""/>
+  <arg name="out_topic_name1" default="kinect1/depth/depthAsRGB"/>
+  <arg name="out_topic_name2" default="kinect2/depth/depthAsRGB"/>
+  <arg name="out_topic_name3" default=""/>
+  <arg name="out_topic_name4" default=""/>
+  <arg name="out_topic_name5" default=""/>
+  <arg name="out_topic_name6" default=""/>
+  <arg name="out_topic_name7" default=""/>
+  <arg name="out_topic_name8" default=""/>
+  <arg name="out_topic_name9" default=""/>
+  <arg name="out_topic_obstacle_cloud" default="/obstacleWorkspace"/>
+  <arg name="out_topic_free_space" default="/freeWorkspace"/>
+  <arg name="reproject_workspace" default="1"/>
+  <arg name="robot_joint_states" default="/joint_states"/>
+  <arg name="robot_base_frame" default="/lwr_arm_base_link"/>
+    <!--<arg name="robot_joint_states" default="/iiwa/joint_states"/>-->
+  <!--<arg name="robot_base_frame" default="/iiwa_link_0"/>-->
+  <arg name="robot_workspace/minimum" default="-1500.0,-1500.0,-500.0"/>
+  <arg name="robot_workspace/maximum" default="1500.0, 1500.0, 900.0"/>
+  <arg name="robot_workspace/point_num" default="200,   200,    75"/>
+  
+  <include file="$(find lwr_gazebo)/launch/lwr_kinect_sim_room.launch">
+  </include>
+  <!--<include file="$(find lwr_gazebo)/launch/iiwa_kinect_sim_room.launch">
+  </include>-->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find kinects_obstacle_extractor)/config/extractor.rviz" required="true" />
+
+  <node name="kinects_obstacle_extractor" pkg="kinects_obstacle_extractor" type="kinects_obstacle_extractor" output="screen">
+    <param name="kinect_topic_name1" value="$(arg kinect_topic_name1)" />
+    <param name="kinect_topic_name2" value="$(arg kinect_topic_name2)" />
+    <param name="kinect_topic_name3" value="$(arg kinect_topic_name3)" />
+    <param name="kinect_topic_name4" value="$(arg kinect_topic_name4)" />
+    <param name="kinect_topic_name5" value="$(arg kinect_topic_name5)" />
+    <param name="kinect_topic_name6" value="$(arg kinect_topic_name6)" />
+    <param name="kinect_topic_name7" value="$(arg kinect_topic_name7)" />
+    <param name="kinect_topic_name8" value="$(arg kinect_topic_name8)" />
+    <param name="kinect_topic_name9" value="$(arg kinect_topic_name9)" />
+    <param name="out_topic_name1" value="$(arg out_topic_name1)" />
+    <param name="out_topic_name2" value="$(arg out_topic_name2)" />
+    <param name="out_topic_name3" value="$(arg out_topic_name3)" />
+    <param name="out_topic_name4" value="$(arg out_topic_name4)" />
+    <param name="out_topic_name5" value="$(arg out_topic_name5)" />
+    <param name="out_topic_name6" value="$(arg out_topic_name6)" />
+    <param name="out_topic_name7" value="$(arg out_topic_name7)" />
+    <param name="out_topic_name8" value="$(arg out_topic_name8)" />
+    <param name="out_topic_name9" value="$(arg out_topic_name9)" />
+    <param name="out_topic_obstacle_cloud" value="$(arg out_topic_obstacle_cloud)" />
+    <param name="out_topic_free_space" value="$(arg out_topic_free_space)" />
+    <param name="reproject_workspace" value="$(arg reproject_workspace)" />
+    <param name="robot_joint_states" value="$(arg robot_joint_states)" />
+    <param name="robot_base_frame" value="$(arg robot_base_frame)" />
+    <param name="robot_workspace/minimum" value="$(arg robot_workspace/minimum)" />
+    <param name="robot_workspace/maximum" value="$(arg robot_workspace/maximum)" />
+    <param name="robot_workspace/point_num" value="$(arg robot_workspace/point_num)" />
+    
+    
+  </node>
+</launch>

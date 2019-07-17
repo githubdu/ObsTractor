@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Controller (gives access to robot control through ros topics)-->
+	<gazebo>
+	<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+		<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+	</plugin>
+	</gazebo>
+
+	<xacro:macro name="gz_link">
+		<gravity>true</gravity>
+		<mu1>0.05</mu1> 
+		<mu2>0.05</mu2> 
+		<kp>40000.0</kp>
+		<selfCollide>true</selfCollide>
+	</xacro:macro>
+
+	<xacro:macro name="gz_joint">
+		<provideFeedback>true</provideFeedback>
+		<implicitSpringDamper>true</implicitSpringDamper>
+		<mu1>0.05</mu1> 
+		<mu2>0.05</mu2>
+		<kp>40000.0</kp>
+	</xacro:macro>
+
+	<xacro:macro name="kuka_lwr_arm_gazebo" params="name">
+
+		<!-- JOINT -->
+
+		<gazebo reference="${name}_arm_0_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_1_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_2_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_3_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_4_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_5_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_6_joint">
+			<xacro:gz_joint/>
+		</gazebo>
+
+
+
+		<!-- LINK -->
+
+		<gazebo reference="${name}_arm_base_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Grey</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_1_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Orange</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_2_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Orange</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_3_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Orange</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_4_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Orange</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_5_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Orange</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_6_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Orange</material>
+		</gazebo>
+
+		<gazebo reference="${name}_arm_7_link">
+			<xacro:gz_link/>
+			<material>Gazebo/Grey</material>
+		</gazebo>
+
+	</xacro:macro>
+
+
+</robot>

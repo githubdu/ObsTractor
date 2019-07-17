@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="moving_human">
+    <link name="human_link">
+      <gravity>false</gravity>
+      <inertial>
+        <mass> 50 </mass>
+        <inertia>
+	  <ixx>50</ixx>
+	  <ixy>0</ixy>
+	  <ixz>0</ixz>
+	  <iyy>50</iyy>
+	  <izz>50</izz>
+        </inertia>
+      </inertial>
+      <visual name="visual">
+        <pose>0 0 0.0 0 0 0 </pose>
+        <geometry>
+ 	  <mesh>
+            <uri> model://MovingHuman/meshes/Man_Mp_Iphone.dae</uri>
+	  </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>world</odometryTopic>
+      <odometryFrame>world</odometryFrame>
+      <odometryRate>30.0</odometryRate>
+      <robotBaseFrame>human_link</robotBaseFrame>
+    </plugin>
+  </model>
+</sdf>

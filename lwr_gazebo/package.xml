@@ -1,0 +1,12 @@
+<package>
+  <name>lwr_gazebo</name>
+  <version>0.1.0</version>
+  <description>The lwr_kinect_gazebo package</description>
+
+  <maintainer email="huibindu1@gmail.com">Huibin Du</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

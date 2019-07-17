@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <!-- properties -->
+  <property name="M_PI" 		     value="3.1415926535897931" />
+  <property name="arm_velocity_scale_factor" value="1"  />
+  <property name="model_scale_x"	     value="1.3"/>
+  <property name="model_scale_y"	     value="1.3"/>
+  <property name="model_scale_z"	     value="1.05"/>
+  <property name="mesh_path"                 value="package://lwr_description/meshes" />
+
+
+<!-- URDF model -->
+  <xacro:macro name="kuka_lwr_arm" params="parent name"> 
+	  <!-- JOINT BASE -->
+	  <joint name="${parent}_${name}_arm_base_joint" type="fixed">
+		<origin xyz="0 0 0.775" rpy="0 0 0"/>
+		<parent link="${parent}"/>
+		<child link="${name}_arm_base_link"/>
+	  </joint>
+
+	  <!-- LINK BASE -->
+	  <link name="${name}_arm_base_link">
+		<visual>
+		  	<origin xyz="0 0 0" rpy="0 0 0"/>
+		  	<geometry>
+		    		<mesh filename="${mesh_path}/meshes_arm/arm_base.stl"
+				scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		  	</geometry>
+		</visual>
+	   </link>
+
+
+	  <!-- JOINT ARM 0 -->
+	  <joint name="${name}_arm_0_joint" type="revolute">
+		<origin xyz="0 0 0.11" rpy="0 0 0"/>
+		<axis xyz="0 0 1"/>
+		<limit lower="${-170 * M_PI / 180}" upper="${170 * M_PI / 180}" effort="204" 
+		       velocity="${arm_velocity_scale_factor * 110 * M_PI / 180}" />
+	       <parent link="${name}_arm_base_link"/>
+	       <child link="${name}_arm_1_link"/>
+	  </joint>
+
+
+	  <!-- LINK ARM 1 -->
+	  <link name="${name}_arm_1_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>
+			<geometry>
+				<mesh filename="${mesh_path}/meshes_arm/arm_segment_a.stl"
+	   			      scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		    	</geometry>
+		</visual>
+	  </link>
+
+
+	  <!-- JOINT ARM 1 -->
+	  <joint name="${name}_arm_1_joint" type="revolute">
+		<origin xyz="0 0 0.20" rpy="0 0 0"/>
+			<axis xyz="0 -1 0"/>
+		<limit lower="${-90 * M_PI / 180}" upper="${90 * M_PI / 180}" effort="306" 
+		       velocity="${arm_velocity_scale_factor * 110 * M_PI / 180}" />       
+		<parent link="${name}_arm_1_link"/>
+		<child link="${name}_arm_2_link"/>
+	  </joint>
+
+
+	<!-- LINK ARM 2 -->
+	<link name="${name}_arm_2_link">
+		<visual>
+		 	<origin xyz="0 0 0.2" rpy="${M_PI} 0 ${M_PI}"/>
+		  	<geometry>
+		    		<mesh filename="${mesh_path}/meshes_arm/arm_segment_b.stl"
+					 scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		  	</geometry>
+		</visual>
+	  </link>
+
+
+	  <!-- JOINT ARM 2 -->
+	  <joint name="${name}_arm_2_joint" type="revolute">
+		<origin xyz="0 0 0.20" rpy="0 0 0"/>
+		<axis xyz="0 0 1"/>
+		<limit  lower="${-170 * M_PI / 180}" upper="${170 * M_PI / 180}" effort="204" 
+			velocity="${arm_velocity_scale_factor * 130 * M_PI / 180}" />
+		<parent link="${name}_arm_2_link"/>
+		<child link="${name}_arm_3_link"/>
+	  </joint>
+
+
+	<!-- LINK ARM 3 -->
+	<link name="${name}_arm_3_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+		        <geometry>
+			        <mesh filename="${mesh_path}/meshes_arm/arm_segment_a.stl" 
+					scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		        </geometry>
+		</visual>
+	  </link>
+
+
+	  <!-- JOINT ARM 3 --> 
+	  <joint name="${name}_arm_3_joint" type="revolute">
+	 	<origin xyz="0 0 0.20" rpy="0 0 0"/>
+	 	<axis xyz="0 1 0"/>
+		<limit  lower="${-120 * M_PI / 180}" upper="${120 * M_PI / 180}" effort="306" 
+			velocity="${arm_velocity_scale_factor * 130 * M_PI / 180}" />
+		<parent link="${name}_arm_3_link"/>
+		<child link="${name}_arm_4_link"/>
+	  </joint>
+
+
+	  <!-- LINK ARM 4 -->
+	  <link name="${name}_arm_4_link">
+		<visual>
+		 	<origin xyz="0 0 0.2" rpy="0 ${M_PI} ${M_PI}"/>
+			<geometry>
+		      		<mesh filename="${mesh_path}/meshes_arm/arm_segment_b.stl" 
+					scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		    	</geometry>
+		</visual>
+
+	  </link>
+
+	  <!-- JOINT ARM 4 -->
+	  <joint name="${name}_arm_4_joint" type="revolute">
+		<origin xyz="0 0 0.20" rpy="0 0 0"/>
+		<axis xyz="0 0 1"/>
+		<limit  lower="${-170 * M_PI / 180}" 
+			upper="${170 * M_PI / 180}" 
+			effort="204" 
+			velocity="${arm_velocity_scale_factor * 130 * M_PI / 180}" />
+		<parent link="${name}_arm_4_link"/>
+		<child link="${name}_arm_5_link"/>
+	  </joint>
+
+
+	  <!-- LINK ARM 5 -->
+	  <link name="${name}_arm_5_link">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>
+			<geometry name="${name}_arm_5_geom">
+				<mesh filename="${mesh_path}/meshes_arm/arm_segment_last.stl" 
+					scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		        </geometry>
+		</visual>
+	  </link>
+
+
+	  <!-- JOINT ARM 5 -->
+	  <joint name="${name}_arm_5_joint" type="revolute">
+		<origin xyz="0 0 0.19" rpy="0 0 0"/>
+		<axis xyz="0 -1 0"/>
+		<limit  lower="${-120 * M_PI / 180}" upper="${120 * M_PI / 180}" effort="306" 
+			velocity="${arm_velocity_scale_factor * 180 * M_PI / 180}" />
+		<parent link="${name}_arm_5_link"/>
+		<child link="${name}_arm_6_link"/>
+	  </joint>
+
+
+	  <!-- LINK ARM 6 -->
+	  <link name="${name}_arm_6_link">
+		<visual>
+	 		<origin xyz="0 0 0" rpy="0 0 ${M_PI}"/>
+	 		<geometry>
+	 	         	<mesh filename="${mesh_path}/meshes_arm/arm_wrist.stl" 
+					scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		        </geometry>
+		</visual>
+	  </link>
+
+	  <!-- JOINT ARM 6 -->
+	  <joint name="${name}_arm_6_joint" type="revolute">
+		<origin xyz="0 0 0.078" rpy="0 0 0"/>
+		<axis xyz="0 0 1"/>
+		<limit  lower="${-170 * M_PI / 180}" upper="${170 * M_PI / 180}" effort="204" 
+			velocity="${arm_velocity_scale_factor * 180 * M_PI / 180}" />
+		<parent link="${name}_arm_6_link"/>
+		<child link="${name}_arm_7_link"/>
+	  </joint>
+
+
+	<!-- LINK ARM 7 -->
+	<link name="${name}_arm_7_link">
+		<visual>
+		  	<origin xyz="0 0 0" rpy="0 0 (-1/4 * M_PI  +  M_PI)"/>
+		        <geometry>
+		        	<mesh filename="${mesh_path}/meshes_arm/arm_flanche.stl" 
+					scale="${model_scale_x} ${model_scale_y} ${model_scale_z}"/>
+		         </geometry>             
+		</visual>
+	</link>
+  </xacro:macro>
+</robot>

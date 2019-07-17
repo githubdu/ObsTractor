@@ -1,0 +1,33 @@
+<launch>
+  <include
+    file="$(find gazebo_ros)/launch/empty_world.launch" />
+  <node
+    name="tf_footprint_base"
+    pkg="tf"
+    type="static_transform_publisher"
+    args="0 0 0 0 0 0 base_link base_footprint 40" />
+  <param 
+    name="robot_description" 
+    command="$(find xacro)/xacro.py '$(find iiwa_7_filter)/urdf/iiwa_7_filter.urdf'" />
+  <node
+    name="urdf_spawner" 
+    pkg="gazebo_ros" 
+    type="spawn_model" 
+    respawn="false" 
+    output="screen"
+    args="-urdf -model luka_lwr_arm -param robot_description" />
+
+  <!-- Robot state publisher-->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen">
+  </node> 
+
+  <!-- joint_state_controller -->
+  <rosparam file="$(find iiwa_7_filter)/config/joint_names_iiwa_7_filter.yaml" command="load"/>
+    <node
+    name="joint_state_publisher"
+    pkg="joint_state_publisher"
+    type="joint_state_publisher" />
+
+
+</launch>
